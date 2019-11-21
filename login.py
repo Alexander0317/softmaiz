@@ -11,6 +11,7 @@ import cv2
 import tkinter as tk
 from tkinter import filedialog
 
+#estoy probando el git de escritorio
 mongoClient = MongoClient('localhost',27017)
 db = mongoClient.softmaiznew
 collection = db 
@@ -84,7 +85,7 @@ def validar():
         messagebox.showwarning("Cuidado","Dato incorrecto")
 
 #Validaciones del registro
-def Controlar():
+def Controlador():
     cadena=Nombres.get()
     patron="([A-Za-z])"
     cadena1=Correo.get()
@@ -100,6 +101,7 @@ def Controlar():
                 if(re.match(patron3,cadena3)):
                     if(re.match(patron,cadena4)):
                         print("formulario de registro correcto")
+                        messagebox.showinfo("Registro","Formulario realizado correctamente")
                         database()
                     else:
                         messagebox.showwarning("Cuidado","Apellidos no valido ")
@@ -184,7 +186,7 @@ def registrarusu():
 
     Button(new,text="Registrar",bg='brown', font=("black",12),command=Controlador).place(x=10,y=445)
     Button(new,text="Buscar",bg='brown', font=("black",12),command=traer).place(x=92,y=445)
-    Button(new,text="Actualizar",bg='brown', font=("black",12),command=consulta).place(x=160,y=445)
+    Button(new,text="Actualizar",bg='brown', font=("black",12),command=actualizarusu).place(x=160,y=445)
     Button(new,text="Borrar",bg='brown', font=("black",12),command=limpiar).place(x=245,y=445)
 
     Button(new,text="Cerrar",bg='orange', font=("black",12),command=new.destroy).place(x=100,y=490)
@@ -210,7 +212,7 @@ def ValidarProduccion():
                     if(re.match(patron9,cadena9)):
                         if(re.match(patron10,cadena10)):
                             print("formulario de producción correcto")
-                        #messagebox.showwarning("Datos de producción Guardados correctamente ")
+                            messagebox.showinfo("Producción","Formulario realizado correctamente")
                             database_produc()
                         else:
                             messagebox.showwarning("Cuidado","valor de mazorcas no comerciales no valido ")
@@ -338,19 +340,47 @@ def tomarfoto():
     cap = cv2.VideoCapture(0)
     leido, frame = cap.read()
     if leido == True:
-	    nombre_foto = str(uuid.uuid4()) + ".png" # uuid4 regresa un objeto, no una cadena. Por eso lo convertimos
-	    cv2.imwrite(nombre_foto, frame)
-	    print("Foto tomada correctamente con el nombre {}".format(nombre_foto))
+        nombre_foto = str(uuid.uuid4()) + ".png" # uuid4 regresa un objeto, no una cadena. Por eso lo convertimos
+        cv2.imwrite(nombre_foto, frame)
+        print("Foto tomada correctamente con el nombre {}".format(nombre_foto))
     else:
-	    print("Error al acceder a la cámara")
+        print("Error al acceder a la cámara")
     cap.release()
 
 def abre():
-    pic=filedialog.askopenfilename()
-    # Cargamos la imagen
-    original = cv2.imread(pic)
-    cv2.imshow("original", original)
+    
+    pic = filedialog.askopenfilename ()
+    #fuente de letra
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    #Cargar la imagen
+    imagen = cv2.imread(pic)
+    if(imagen is None):
+        print("Error: no se ha podido encontrar la imagen")
+        quit()
+
+    #convertir la imagen a hsv
+    hsv = cv2.cvtColor(imagen, cv2.COLOR_BGR2HSV)
+    #Rangos del color que debe quitar (blanco)
+    rango_bajo = np.array([0,0,200])
+    rango_alto = np.array([255, 50, 255])
+    fondo = cv2.inRange(hsv, rango_bajo, rango_alto)
+
+    mazorcas = cv2.bitwise_not(fondo)
+
+    kernel = np.ones((3,3),np.uint8)
+    mazorcas = cv2.morphologyEx(mazorcas,cv2.MORPH_OPEN,kernel)
+    mazorcas = cv2.morphologyEx(mazorcas,cv2.MORPH_CLOSE,kernel)
+
+    #contorno de los objetos que esten sobre el fondo blanco
+    contours,_ = cv2.findContours(mazorcas, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    cv2.drawContours(imagen, contours, -1, (0,255,0), 2)
+    #mostrar el numero de objetos contornados
+    print(len(contours),' Mazorcas ' )
+
+    cv2.imshow('Final', imagen)
+
     cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 def identidad():
     pic=filedialog.askopenfilename()
