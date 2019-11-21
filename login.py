@@ -16,57 +16,6 @@ mongoClient = MongoClient('localhost',27017)
 db = mongoClient.softmaiznew
 collection = db 
 
-class Table(tk.Frame):
-    def __init__(self, parent=None, title="", headers=[], height=10):
-        tk.Frame.__init__(self, parent)
-        self._title = tk.Label(self, text=title, background="sea green", font=("Helvetica", 16))
-        self._headers = headers
-        self._tree = ttk.Treeview(self,
-                                height=height,
-                                columns=self._headers, 
-                                show="headings")
-        self._title.pack(side=tk.TOP, fill="x")
-
-        # Agregamos dos scrollbars 
-        vsb = ttk.Scrollbar(self, orient="vertical", command=self._tree.yview)
-        vsb.pack(side='right', fill='y')
-        hsb = ttk.Scrollbar(self, orient="horizontal", command=self._tree.xview)
-        hsb.pack(side='bottom', fill='x')
-        self._tree.configure(xscrollcommand=hsb.set, yscrollcommand=vsb.set)
-        self._tree.pack(side="left")
-
-        for header in self._headers:
-            self._tree.heading(header, text=header.title())
-            self._tree.column(header, stretch=True, width=tkFont.Font().measure(header.title()))
-
-    def add_row(self, row):
-        self._tree.insert('', 'end', values=row)
-        for i, item in enumerate(row):
-            col_width = tkFont.Font().measure(item)
-            if self._tree.column(self._headers[i], width=None) < col_width:
-                    self._tree.column(self._headers[i], width=col_width)
-
-def ventana_reporte(parent=None):
-    t3 = tk.Toplevel(parent, bg="lawn green")
-    t3.title("Lista de Usuarios")
-    t3.geometry("600x400+700+20")
-    t3.configure(bg="sea green")
-    t3.focus_set()
-    t3.grab_set()
-
-    clientes_headers = (u"Cedula",   u"Nombres", u"Apellidos", u"Correo", u"Edad",   u"Tipo")
-    clientes_tab = Table(t3, title="Usuarios Registrados", headers=clientes_headers)
-    clientes_tab.pack()
-
-    #cursor.execute("SELECT Clientes.Marca,Facebook,Instagram,Twitter,Correo,Web FROM Clientes")
-    cursor = ((u"Marca A", u"Facebook A", u"Instagram A", u"Twitter A", u"aaa@mail.com", u"www.aaa.com"),
-              (u"Marca B", u"Facebook B", u"Instagram B", u"Twitter B", u"bbb@mail.com", u"www.bbb.com"))
-
-    for row in cursor:
-        clientes_tab.add_row(row)
-    boton8 = tk.Button(t3,text='cerrar',bg="orange", command=t3.destroy)
-    boton8.pack(side=tk.TOP,padx=5,pady=5,ipadx=5,ipady=5)
-
 #Validaciones del login
 def validar():
     user=db.Usuarios.find_one({"tipo":entrada1.get(),"password":entrada2.get()})
@@ -85,7 +34,7 @@ def validar():
         messagebox.showwarning("Cuidado","Dato incorrecto")
 
 #Validaciones del registro
-def Controlador():
+def coni():
     cadena=Nombres.get()
     patron="([A-Za-z])"
     cadena1=Correo.get()
@@ -145,7 +94,7 @@ def registrarusu():
     new.configure(background='sea green')
     new.title("Registrar Usuario")
     
-    Label(new,text="Digite el siguiente formulario" ,bg="lawn green").pack(padx=5,pady=5,ipadx=5,ipady=5)
+    Label(new,text="Digite el siguiente formulario").pack(padx=5,pady=5,ipadx=5,ipady=5)
 
     Label(new,text="Identificacion: ", font=("Agency FB",14)).place(x=10,y=45)
     entry_1 = tk.Entry(new,textvar=Identificaion)
@@ -184,7 +133,7 @@ def registrarusu():
     Estado.set(value=1) 
     droplist.pack(padx=4,pady=4,ipadx=4,ipady=4)
 
-    Button(new,text="Registrar",bg='brown', font=("black",12),command=Controlador).place(x=10,y=445)
+    Button(new,text="Registrar",bg='brown', font=("black",12),command=coni).place(x=10,y=445)
     Button(new,text="Buscar",bg='brown', font=("black",12),command=traer).place(x=92,y=445)
     Button(new,text="Actualizar",bg='brown', font=("black",12),command=actualizarusu).place(x=160,y=445)
     Button(new,text="Borrar",bg='brown', font=("black",12),command=limpiar).place(x=245,y=445)
@@ -234,7 +183,7 @@ def RegistrarProduccion():
     new.geometry("500x500+700+5")
     new.configure(background='sea green')
     new.title("Registrar Produccion")
-    Label(new,text="Digite el siguiente formulario" ,bg="lawn green").pack(padx=5,pady=5,ipadx=5,ipady=5)
+    Label(new,text="Digite el siguiente formulario").pack(padx=5,pady=5,ipadx=5,ipady=5)
 
     Label(new,text="Fecha de produccion: ", font=("Agency FB",14)).place(x=10,y=45)
     entry_17 = tk.Entry(new,textvar=Fecha_produccion)
@@ -248,14 +197,14 @@ def RegistrarProduccion():
     entry_11= tk.Entry(new,textvar=Nombres)
     entry_11.pack(padx=5,pady=5,ipadx=5,ipady=5)
 
-    label_4 = Label(new, text="------------Conteo de mazorcas------------",bg="lawn green",fg="black" )
+    label_4 = Label(new, text="------------Conteo de mazorcas------------",fg="black" )
     label_4.pack(padx=4,pady=4,ipadx=4,ipady=4)
 
     Label(new,text="Total Mazorcas: ", font=("Agency FB",14)).place(x=10,y=200)
     entry_5= tk.Entry(new,textvar=Mazorcas)
     entry_5.pack(padx=5,pady=5,ipadx=5,ipady=5)
 
-    label_4 = Label(new, text="------------Verificacion de calidad------------",bg="lawn green",fg="black")
+    label_4 = Label(new, text="------------Verificacion de calidad------------",fg="black")
     label_4.pack(padx=4,pady=4,ipadx=4,ipady=4)    
 
     Label(new,text="Mazorcas comerciales: ", font=("Agency FB",14)).place(x=10,y=275)
@@ -310,12 +259,10 @@ def abrirmenu():
     win.geometry("450x300+700+20")
     win.configure(background='sea green')
     win.title("Menu")
-    e3 = tk.Label(win,text="Opciones Admin ", bg="lawn green",fg="black")
+    e3 = tk.Label(win,text="Opciones Admin ",fg="black")
     e3.pack(padx=5,pady=5,ipadx=5,ipady=5,fill=tk.X)
     boton4 = tk.Button(win,text="Registro ",bg="orange", fg="black", command=registrarusu)
     boton4.pack(side=tk.TOP,padx=5,pady=5,ipadx=5,ipady=5) 
-    boton7 = tk.Button(win,text="Lista",bg="orange", fg="black", command=ventana_reporte)
-    boton7.pack(side=tk.TOP,padx=5,pady=5,ipadx=5,ipady=5)
     boton2 = tk.Button(win,text='cerrar',bg="orange", command=win.destroy)
     boton2.pack(side=tk.TOP,padx=5,pady=5,ipadx=5,ipady=5)
 
@@ -325,14 +272,12 @@ def abrirmenuoperario():
     win.geometry("450x300+700+20")
     win.configure(background='sea green')
     win.title("Menu Operario")
-    e3 = tk.Label(win,text="Opciones User ", bg="lawn green",fg="black")
+    e3 = tk.Label(win,text="Opciones User ",fg="black")
     e3.pack(padx=5,pady=5,ipadx=5,ipady=5,fill=tk.X)
     boton9 = tk.Button(win,text="Contar Mazorcas",bg="orange", fg="black", command=conteo)
     boton9.pack(side=tk.TOP,padx=5,pady=5,ipadx=5,ipady=5)
     boton5 = tk.Button(win,text="Producción",bg="orange", fg="black", command=RegistrarProduccion)
     boton5.pack(side=tk.TOP,padx=5,pady=5,ipadx=5,ipady=5)
-    boton10 = tk.Button(win,text="Verificar Calidad",bg="orange", fg="black", command=calidad)
-    boton10.pack(side=tk.TOP,padx=5,pady=5,ipadx=5,ipady=5)
     boton11 = tk.Button(win,text='Cerrar',bg="orange", command=win.destroy)
     boton11.pack(side=tk.TOP,padx=5,pady=5,ipadx=5,ipady=5)
 
@@ -382,23 +327,6 @@ def abre():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
-def identidad():
-    pic=filedialog.askopenfilename()
-    # Cargamos la imagen
-    original = cv2.imread(pic)
-    # Convertimos a escala de grises
-    gris = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
-    # Aplicar suavizado Gaussiano
-    gauss = cv2.GaussianBlur(gris, (5,5), 0)
-    # Detectamos los bordes con Canny
-    canny = cv2.Canny(gauss, 50, 150)
-    cv2.imshow("canny", canny)
-    # Buscamos los contornos
-    (contornos,_) = cv2.findContours(canny.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    # Mostramos el número de monedas por consola
-    print("He encontrado {} objetos".format(len(contornos)))
-    cv2.drawContours(original,contornos,-1,(0,0,255), 2)
-    cv2.waitKey(0)
 
 def conteo():
     ventana.deiconify()
@@ -406,22 +334,10 @@ def conteo():
     new.geometry("500x300+700+20")
     new.configure(background='sea green')
     new.title("Registrar Usuario")
-    Label(new,text="Busqueda y Conteo", bg="lawn green",fg="black").pack(padx=5,pady=5,ipadx=5,ipady=5,fill=tk.X)
+    Label(new,text="Busqueda y Conteo",fg="black").pack(padx=5,pady=5,ipadx=5,ipady=5,fill=tk.X)
     Button(new,text="Tomar foto",bg="orange", fg="black", command= tomarfoto).pack(side=tk.TOP,padx=5,pady=5,ipadx=5,ipady=5)
-    Button(new,text="Busqueda",bg="orange", fg="black", command=abre).pack(side=tk.TOP,padx=5,pady=5,ipadx=5,ipady=5)
-    Button(new,text="Verificar",bg="orange", fg="black", command=identidad).pack(side=tk.TOP,padx=5,pady=5,ipadx=5,ipady=5)
-
-    boton2 = tk.Button(new,text='cerrar',bg="orange", command=new.destroy)
-    boton2.pack(side=tk.TOP,padx=5,pady=5,ipadx=5,ipady=5)
-
-def calidad():
-    ventana.deiconify()
-    new = tk.Toplevel()
-    new.geometry("450x450+700+20")
-    new.configure(background='sea green')
-    new.title("Registrar Usuario")
-    e3 = tk.Label(new,text="Calidad", bg="lawn green",fg="black")
-    e3.pack(padx=5,pady=5,ipadx=5,ipady=5,fill=tk.X)
+    Button(new,text="Conteo",bg="orange", fg="black", command=abre).pack(side=tk.TOP,padx=5,pady=5,ipadx=5,ipady=5)
+    
     boton2 = tk.Button(new,text='cerrar',bg="orange", command=new.destroy)
     boton2.pack(side=tk.TOP,padx=5,pady=5,ipadx=5,ipady=5)
 
