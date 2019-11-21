@@ -47,7 +47,7 @@ class Table(tk.Frame):
                     self._tree.column(self._headers[i], width=col_width)
 
 def ventana_reporte(parent=None):
-    t3 = tk.Toplevel(parent, bg="lawn green")
+    t3 = tk.Toplevel(parent)
     t3.title("Lista de Usuarios")
     t3.geometry("600x400+700+20")
     t3.configure(bg="sea green")
