@@ -228,7 +228,6 @@ def ValidarProduccion():
         messagebox.showwarning("Cuidado","Fecha de produccion incorrecta")
 
 def RegistrarProduccion():
-    
     ventana.deiconify()
     new = tk.Toplevel()
     new.geometry("500x500+700+5")
@@ -348,7 +347,6 @@ def tomarfoto():
     cap.release()
 
 def abre():
-    
     pic = filedialog.askopenfilename ()
     #fuente de letra
     font = cv2.FONT_HERSHEY_SIMPLEX
@@ -378,11 +376,8 @@ def abre():
     print(len(contours),' Mazorcas ' )
 
     cv2.imshow('Final', imagen)
-
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-
-
 
 def identidad():
     pic=filedialog.askopenfilename()
@@ -429,7 +424,6 @@ def calidad():
 
 def cerrarventana():
     ventana.destroy()
-
 
 ventana = tk.Tk()
 ventana.title("Login -- Softmaiz")
